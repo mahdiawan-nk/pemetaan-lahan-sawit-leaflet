@@ -28,6 +28,9 @@
                 <a href="<?= base_url(); ?>index.php/cetakexcel" type="button" class="btn btn-info btn-sm" >
                     Download Excel <?= $page; ?>
                 </a>
+                <a href="<?= base_url(); ?>lihat_data_lahan/cetakpdf" type="button" class="btn btn-info btn-sm" >
+                    Download Pdf <?= $page; ?>
+                </a>
             </div>
             <div class="card-body">
                 <table class="table table-hover">
