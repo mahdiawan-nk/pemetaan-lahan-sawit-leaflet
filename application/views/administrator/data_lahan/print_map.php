@@ -242,7 +242,7 @@
                     this.map.addControl(comp);
                     setInterval(() => {
                         if (this.map) {
-                            // window.print()
+                            window.print()
                         }
                     }, 500);
 
