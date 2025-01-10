@@ -345,9 +345,74 @@ class Lihat_data_lahan extends CI_Controller
 		return $data;
 	}
 
-	public function  print($id) {
+	public function print($id)
+	{
 		$data['data'] = $this->M_lahan->show_by_id($id);
+		$dataPemetaan = $this->db->get_where('pemetaan_blok', ['lahan_id' => $id])->row()->coordinates;
+		$jsonDecode = json_decode($dataPemetaan);
+
+		// Pastikan data 'coordinates' adalah array
+		if (isset($jsonDecode->coordinates) && is_array($jsonDecode->coordinates)) {
+			$data['tikor'] = $this->calculateCentroid($jsonDecode->coordinates);
+		} else {
+			$data['tikor'] = null; // Atau berikan pesan error
+		}
+
+		// $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
 		$this->load->view('administrator/data_lahan/print_map', $data);
-		
+	}
+
+	function calculateCentroid($coordinates)
+	{
+		$sumLatitude = 0;
+		$sumLongitude = 0;
+		$totalPoints = count($coordinates[0]);
+		// Pastikan $coordinates adalah array dua dimensi
+		if ($totalPoints > 0 && is_array($coordinates[0])) {
+			foreach ($coordinates[0] as $point) {
+				if (is_array($point) && count($point) == 2) {
+					$sumLongitude += $point[0]; // Bujur
+					$sumLatitude += $point[1];   // Lintang
+				}
+			}
+
+			// 	// Hitung rata-rata bujur dan lintang untuk titik tengah
+			$centroidLongitude = $sumLongitude / $totalPoints;
+			$centroidLatitude = $sumLatitude / $totalPoints;
+
+			return ['kordinat' => $centroidLongitude . ',' . $centroidLatitude, 'lintang' => $this->convertCoordinateToDMS($centroidLatitude, 'latitude'), 'bujur' => $this->convertCoordinateToDMS($centroidLongitude, 'longitude')];
+		}
+
+		// return ['longitude' => 0, 'latitude' => 0]; // Kembalikan nilai default jika data tidak valid
+	}
+
+	function convertCoordinateToDMS($coordinate, $type)
+	{
+		$isNegative = $coordinate < 0;
+		$absoluteCoordinate = abs($coordinate);
+
+		// Hitung derajat, menit, dan detik
+		$degrees = floor($absoluteCoordinate);
+		$minutes = floor(($absoluteCoordinate - $degrees) * 60);
+		$seconds = (($absoluteCoordinate - $degrees - ($minutes / 60)) * 3600);
+
+		// Tentukan label untuk lintang/bujur
+		$hemisphere = '';
+		if ($type === 'latitude') {
+			$hemisphere = $isNegative ? 'LS' : 'LU'; // Lintang
+		} elseif ($type === 'longitude') {
+			$hemisphere = $isNegative ? 'BB' : 'BT'; // Bujur
+		}
+
+		// Format hasil dengan dua digit detik
+		return sprintf('%d°%d\'%.2f" %s', $degrees, $minutes, $seconds, $hemisphere);
+	}
+
+
+	public function  cetakpdf()
+	{
+		$data['data'] = $this->M_lahan->show_lahan()->result();
+		$this->load->view('administrator/data_lahan/print_all', $data);
 	}
 }
