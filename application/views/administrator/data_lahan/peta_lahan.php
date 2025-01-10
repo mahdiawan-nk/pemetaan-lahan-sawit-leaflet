@@ -76,7 +76,8 @@
                 });
                 // Add OpenStreetMap tiles
                 Stadia_AlidadeSatellite.addTo(this.map);
-
+                var comp = new L.Control.Compass({autoActive: false, showDigit:false});
+                this.map.addControl(comp);
                 this.fetchPolygons();
 
 
@@ -122,6 +123,10 @@
                                         <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                             Jumlah Tandan
                                             <span class="badge bg-primary rounded-pill">${feature.properties.jumlah_tandan}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                            Perkiraan Replanting
+                                            <span class="badge bg-primary rounded-pill">${parseInt(feature.properties.tahun_tanam) + 30}</span>
                                         </li>
                                         <li class="list-group-item  px-0">
                                             <a href="<?= base_url() ?>/lihat_data_lahan/peta_lahan/${feature.properties.id_lahan}" class="btn btn-primary w-100">Detail</a>
