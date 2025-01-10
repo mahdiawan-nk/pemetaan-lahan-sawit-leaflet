@@ -38,6 +38,8 @@
 	<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.4/leaflet-image.js'></script>
 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script> -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<link rel="stylesheet" href="<?=base_url('assets/plugin/leaflet-compass.css')?>">
+	<script src="<?=base_url('assets/plugin/leaflet-compass.js')?>"></script>
 
 
 </head>
