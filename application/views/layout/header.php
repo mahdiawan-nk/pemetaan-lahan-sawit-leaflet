@@ -59,7 +59,7 @@
 
 				<div class="">
 					<div class="main-menu-header">
-						<img class="img-radius" src="<?= base_url(); ?>assets/images/avatar-1.jpg" alt="User-Profile-Image">
+						<img class="img-radius" src="<?= base_url(); ?>assets/images/logo.png" alt="User-Profile-Image">
 						<div class="user-details">
 							<span>PKS.PT</span>
 							<div id="more-details">Mitra Bumi<i class="fa fa-chevron-down m-l-5"></i></div>
