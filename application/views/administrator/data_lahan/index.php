@@ -25,12 +25,12 @@
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#myModal">
                     Add <?= $page; ?>
                 </button>
-                <a href="<?= base_url(); ?>index.php/cetakexcel" type="button" class="btn btn-info btn-sm" >
+                <!-- <a href="<?= base_url(); ?>index.php/cetakexcel" type="button" class="btn btn-info btn-sm" >
                     Download Excel <?= $page; ?>
                 </a>
                 <a href="<?= base_url(); ?>lihat_data_lahan/cetakpdf" type="button" class="btn btn-info btn-sm" >
                     Download Pdf <?= $page; ?>
-                </a>
+                </a> -->
             </div>
             <div class="card-body">
                 <table class="table table-hover">
