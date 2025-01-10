@@ -6,7 +6,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js" integrity="sha512-v8+bPcpk4Sj7CKB11+gK/FnsbgQ15jTwZamnBf/xDmiQDcgOIYufBo6Acu1y30vrk8gg5su4x0CG3zfPaq5Fcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    <link rel="stylesheet" href="<?= base_url('assets/plugin/leaflet-compass.css') ?>">
+    <script src="<?= base_url('assets/plugin/leaflet-compass.js') ?>"></script>
     <style>
         body {
             width: 230mm;
@@ -127,7 +128,7 @@
             </div>
             <hr>
             <div class="content">
-                <table class="table">
+                <!-- <table class="table">
                     <thead>
                         <tr>
                             <th scope="col">Nama Blok</th>
@@ -139,15 +140,69 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th ><?=$data->blok?></th>
-                            <td><?=$data->luas_blok?></td>
-                            <td><?=$data->tahun_tanam?></td>
-                            <td><?=$data->jumlah_tandan?></td>
-                            <td><?=$data->produksi?></td>
+                            <th><?= $data->blok ?></th>
+                            <td><?= $data->luas_blok ?></td>
+                            <td><?= $data->tahun_tanam ?></td>
+                            <td><?= $data->jumlah_tandan ?></td>
+                            <td><?= $data->produksi ?></td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
                 <div id="map" style="height: 550px;"> </div>
+                <div style="margin-top: 20px">
+                    <div style="display: flex; justify-content: start;flex-direction: column">
+                        <span style="font-size: 18px;font-weight: bold;margin-bottom: 10px">Keterangan/Informasi Lahan</span>
+                        <?php
+                        $hari = array('Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu');
+                        $bulan = array('January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret', 'April' => 'April', 'May' => 'Mei', 'June' => 'Juni', 'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September', 'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember');
+
+                        $tanggal = date('l, d F Y');
+                        $hariIndo = $hari[date('l')]; // Menyaring nama hari dalam bahasa Indonesia
+                        $bulanIndo = $bulan[date('F')]; // Menyaring nama bulan dalam bahasa Indonesia
+
+                        echo '<span style="font-size: 14px">' . str_replace(array(date('l'), date('F')), array($hariIndo, $bulanIndo), $tanggal) . '</span>';
+                        ?>
+                    </div>
+                    <table style="margin-top: 10px;">
+                        <tr>
+                            <td style="font-size: 14px">Nama Blok</td>
+                            <td style="font-size: 14px">:</td>
+                            <td style="font-size: 14px"><?= $data->blok ?></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Luas Blok</td>
+                            <td style="font-size: 14px">:</td>
+                            <td style="font-size: 14px"><?= $data->luas_blok ?> Ha</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Tahun Tanam</td>
+                            <td style="font-size: 14px">:</td>
+                            <td style="font-size: 14px"><?= $data->tahun_tanam ?></td>
+                        </tr>
+
+                        <tr>
+                            <td style="font-size: 14px" rowspan="3">Titik</td>
+                            <td style="font-size: 14px" rowspan="3">:</td>
+                            <td style="font-size: 14px">Kordinat : <?= $tikor['kordinat'] ?></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Lintang : <?= $tikor['lintang'] ?></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Bujur : <?= $tikor['bujur'] ?></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Jumlah Tandan</td>
+                            <td style="font-size: 14px">:</td>
+                            <td style="font-size: 14px"><?= $data->jumlah_tandan ?> </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 14px">Hasil Produksi</td>
+                            <td style="font-size: 14px">:</td>
+                            <td style="font-size: 14px"><?= $data->produksi ?></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -168,7 +223,7 @@
 
                     this.fetchPolygons();
                     // Initialize map
-                    this.map = L.map('map',{
+                    this.map = L.map('map', {
                         zoomControl: false,
                         attributionControl: false
                     }).setView([0.4529698980669356, 101.05597555352796], 14);
@@ -180,9 +235,14 @@
                     });
                     // Add OpenStreetMap tiles
                     Stadia_AlidadeSatellite.addTo(this.map);
+                    var comp = new L.Control.Compass({
+                        autoActive: false,
+                        showDigit: false
+                    });
+                    this.map.addControl(comp);
                     setInterval(() => {
                         if (this.map) {
-                            window.print()
+                            // window.print()
                         }
                     }, 500);
 
@@ -212,18 +272,15 @@
                             return point;
                         });
 
-                        // Menyimpan koordinat yang diterima dari API ke dalam polygonCoords.coordinates
-                        this.polygonCoords.coordinates = polyCords;
-
-                        // Jika ada polygon sebelumnya, hapus
-                        if (this.fetchedPolygon) {
-                            this.map.removeLayer(this.fetchedPolygon);
-                        }
-
                         // Tambahkan polygon baru dari API ke peta
                         this.fetchedPolygon = L.polygon(polyCords, {
                             color: 'red'
                         }).addTo(this.map);
+                        // Menampilkan teks (tooltip) pada polygon
+                        this.fetchedPolygon.bindTooltip("<?=$data->blok?>", {
+                            permanent: true, // Teks tetap muncul di polygon
+                            direction: "center" // Posisi teks di tengah polygon
+                        }).openTooltip();
                         this.map.fitBounds(this.fetchedPolygon.getBounds());
 
 
